@@ -1,12 +1,16 @@
 package com.br.minhasfinansas.domain.lancamentos;
 
 import com.br.minhasfinansas.domain.usuario.validacoes.RegraNegocioException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class LancamentoServiceImp implements LancamentoService{
     @Autowired
     private LancamentoRepository lancamentoRepository;
@@ -15,7 +19,7 @@ public class LancamentoServiceImp implements LancamentoService{
     @Transactional
     public Lancamento salvar(Lancamento lancamento) {
         validar(lancamento);
-        lancamento.setStatus(StatusLancamento.PEDENTE);
+        lancamento.setStatus(StatusLancamento.PENDENTE);
         return lancamentoRepository.save(lancamento);
     }
 
@@ -31,13 +35,14 @@ public class LancamentoServiceImp implements LancamentoService{
     @Transactional
     public void deletar(Lancamento lancamento) {
         Objects.requireNonNull(lancamento.getId());
-        lancamentoRepository.delete(lancamento);
+        lancamentoRepository.deleteById(lancamento.getId());
     }
 
     @Override
-    @Transactional()
+    @Transactional(readOnly = true)
     public List<Lancamento> buscar(Lancamento lancamentoFiltro) {
-        return null;
+        Example<Lancamento> example = Example.of(lancamentoFiltro, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+        return lancamentoRepository.findAll(example);
     }
 
     @Override
@@ -49,6 +54,12 @@ public class LancamentoServiceImp implements LancamentoService{
     @Override
     public void validar(Lancamento lancamento) {
 
+//        if(lancamento.getId()!= null){
+//            if(lancamentoRepository.existsById(lancamento.getId())){
+//                throw new RegraNegocioException("Esse id ja esta sendo utilizado");
+//            }
+//        }
+
         if(lancamento.getDescricao() == null || lancamento.getDescricao().trim().equals("")){
             throw new RegraNegocioException("Informe uma descricao valida");
         }
@@ -57,7 +68,7 @@ public class LancamentoServiceImp implements LancamentoService{
             throw new RegraNegocioException("Informe um mes valido");
         }
 
-        if(lancamento.getAno() == 0 || (lancamento.getAno() >= 1000 && lancamento.getAno() <= 9999)){
+        if(lancamento.getAno() == 0 || (lancamento.getAno() < 1000 && lancamento.getAno() > 9999)){
             throw new RegraNegocioException("Informe um ano valido");
         }
 
@@ -72,6 +83,36 @@ public class LancamentoServiceImp implements LancamentoService{
         if(lancamento.getTipo() == null){
             throw new RegraNegocioException("Informe um tipo de lancamento");
         }
+    }
+
+    @Override
+    public Lancamento findById(Long id) {
+        var lancamento = lancamentoRepository.findById(id);
+
+        if(lancamento.isPresent())return lancamento.get();
+        else throw new RegraNegocioException("Lancamento nao encontrado");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Double obterSaldoPorUsuario(Long id) {
+        Double receitas = lancamentoRepository.obterSaldoPorTipoLancamentoEUsuario(id,TipoLancamento.RECEITA,StatusLancamento.EFETIVADO);
+        Double despesas = lancamentoRepository.obterSaldoPorTipoLancamentoEUsuario(id,TipoLancamento.DESPESA,StatusLancamento.EFETIVADO);
+
+        if (receitas==null){
+            receitas= (double) 0;
+        }
+
+        if (despesas==null){
+            despesas= (double) 0;
+        }
+
+        return receitas - despesas;
+    }
+
+    @Override
+    public List<Lancamento> findAll() {
+        return lancamentoRepository.findAll();
     }
 
 }

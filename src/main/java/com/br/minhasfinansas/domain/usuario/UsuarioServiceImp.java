@@ -2,9 +2,9 @@ package com.br.minhasfinansas.domain.usuario;
 
 import com.br.minhasfinansas.domain.usuario.validacoes.ErroDeAutenticacao;
 import com.br.minhasfinansas.domain.usuario.validacoes.RegraNegocioException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -44,5 +44,18 @@ public class UsuarioServiceImp implements UsuarioService{
     public void validarEmail(String email) {
         boolean existe = usuarioRepository.existsByEmail(email);
         if (existe) throw new RegraNegocioException("ja existe um usuario cadastrado com este email.");
+    }
+
+    @Override
+    public Usuario findById(Long idUsuario) {
+        var usuario = usuarioRepository.findById(idUsuario);
+
+        if (usuario.isPresent())return usuario.get();
+        else throw new RegraNegocioException("Usuario nao encontrado");
+    }
+
+    @Override
+    public boolean existsById(Long idUsuario) {
+        return usuarioRepository.existsById(idUsuario);
     }
 }

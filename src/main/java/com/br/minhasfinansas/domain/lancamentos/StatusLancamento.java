@@ -1,7 +1,7 @@
 package com.br.minhasfinansas.domain.lancamentos;
 
 public enum StatusLancamento {
-    PEDENTE,
+    PENDENTE,
     CANCELADO,
     EFETIVADO
 }

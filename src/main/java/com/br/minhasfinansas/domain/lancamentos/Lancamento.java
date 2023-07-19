@@ -2,20 +2,18 @@ package com.br.minhasfinansas.domain.lancamentos;
 
 import com.br.minhasfinansas.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "lancamento")
+@Table(name = "lancamento", schema = "financas")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Lancamento {
     @Id
     @Column(name = "id")
@@ -23,9 +21,9 @@ public class Lancamento {
     private Long id;
 
     private String descricao;
-    private int mes;
-    private int ano;
-    private int valor;
+    private Integer mes;
+    private Integer ano;
+    private Double valor;
     @Enumerated(value = EnumType.STRING)
     private TipoLancamento tipo;
     @Enumerated(value = EnumType.STRING)
