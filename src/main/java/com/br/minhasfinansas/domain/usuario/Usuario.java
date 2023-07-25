@@ -1,5 +1,6 @@
 package com.br.minhasfinansas.domain.usuario;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class Usuario {
     private Long id;
     private String nome;
     private String email;
+    @JsonIgnore
     private String senha;
     private LocalDate data_cadastro;
 }

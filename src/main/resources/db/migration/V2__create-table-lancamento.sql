@@ -1,6 +1,6 @@
 CREATE TABLE financas.lancamento
 (
-    id bigserial NOT NULL PRIMARY KEY ,
+    id bigserial PRIMARY KEY ,
     descricao character varying(100) NOT NULL,
     mes integer NOT NULL,
     ano integer NOT NULL,
