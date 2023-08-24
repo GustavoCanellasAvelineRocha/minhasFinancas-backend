@@ -42,6 +42,8 @@ public class UsuarioServiceImp implements UsuarioService{
 
     @Override
     public void validarEmail(String email) {
+        if(email == null || email.equals("")) throw new RegraNegocioException("Digite um email compativel");
+
         boolean existe = usuarioRepository.existsByEmail(email);
         if (existe) throw new RegraNegocioException("ja existe um usuario cadastrado com este email.");
     }

@@ -29,17 +29,17 @@ public class TratadorDeErros {
 
     @ExceptionHandler(ErroDeAutenticacao.class)
     public ResponseEntity tratarErroAutenticacao(ErroDeAutenticacao exception){
-        return ResponseEntity.badRequest().body("Erro: " + exception.getLocalizedMessage());
+        return ResponseEntity.badRequest().body(exception.getLocalizedMessage());
     }
 
     @ExceptionHandler(RegraNegocioException.class)
     public ResponseEntity tratarErroDeRegraDeNegocio(RegraNegocioException exception){
-        return ResponseEntity.badRequest().body("Erro: " + exception.getLocalizedMessage());
+        return ResponseEntity.badRequest().body(exception.getLocalizedMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity tratarErro500(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getLocalizedMessage());
     }
 
     private record DadosErroValidacao(String field, String msg){

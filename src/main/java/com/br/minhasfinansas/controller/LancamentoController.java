@@ -49,6 +49,15 @@ public class LancamentoController {
         return ResponseEntity.ok(lancamentos);
     }
 
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity buscarPeloId(@PathVariable("id") Long id){
+        Lancamento lancamento = lancamentoService.findById(id);
+
+        LancamentoDTO lancamentoDTO= new LancamentoDTO(lancamento);
+
+        return ResponseEntity.ok(lancamentoDTO);
+    }
+
     @GetMapping("/listar")
     public ResponseEntity listar(){
         List<Lancamento> lista = lancamentoService.findAll();
@@ -57,7 +66,7 @@ public class LancamentoController {
         return ResponseEntity.ok(listaDTO);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity atualizar(@PathVariable("id") Long id,@RequestBody LancamentoDTO lancamentoDTO){
         Lancamento entidade = lancamentoService.findById(id);
         Lancamento lancamento = new Lancamento(null,lancamentoDTO.descricao(),lancamentoDTO.mes(),lancamentoDTO.ano(),lancamentoDTO.valor(),
