@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignorar arquivos específicos
+application.properties
+Dockerfile
