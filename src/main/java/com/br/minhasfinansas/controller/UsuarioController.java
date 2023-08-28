@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 
 @RestController
@@ -38,6 +39,26 @@ public class UsuarioController {
                 .build();
         usuarioService.salvarUsuario(usuario);
         return new ResponseEntity(usuarioDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("Convidado")
+    @Transactional
+    public ResponseEntity salvarConvidado(){
+        Usuario usuario = Usuario.builder().nome("Convidado")
+                .email("Convidado@email")
+                .senha("Convidado")
+                .data_cadastro(LocalDate.now())
+                .build();
+        usuarioService.salvarUsuario(usuario);
+
+        UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
+        return new ResponseEntity(usuarioDTO, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("Convidado")
+    @Transactional
+    public ResponseEntity deletarConvidado(){
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}/saldo")
