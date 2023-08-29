@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -44,12 +45,16 @@ public class UsuarioController {
     @PostMapping("Convidado")
     @Transactional
     public ResponseEntity salvarConvidado(){
-        Usuario usuario = Usuario.builder().nome("Convidado")
-                .email("Convidado@email")
-                .senha("Convidado")
+        UUID uuid = UUID.randomUUID();
+        UUID uuidPassword = UUID.randomUUID();
+
+        Usuario usuario = Usuario.builder().nome("Convidado"+uuid)
+                .email("Convidado@email"+uuid)
+                .senha("Convidado"+uuidPassword)
                 .data_cadastro(LocalDate.now())
                 .build();
-        usuarioService.salvarUsuario(usuario);
+
+        usuarioService.salvarConvidado(usuario);
 
         UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
         return new ResponseEntity(usuarioDTO, HttpStatus.CREATED);
