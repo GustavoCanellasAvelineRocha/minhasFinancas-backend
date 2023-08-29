@@ -46,11 +46,11 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity salvarConvidado(){
         UUID uuid = UUID.randomUUID();
-        UUID uuidPassword = UUID.randomUUID();
+        String uuidPassword = UUID.randomUUID().toString().substring(0, 20);
 
         Usuario usuario = Usuario.builder().nome("Convidado"+uuid)
                 .email("Convidado@email"+uuid)
-                .senha("Convidado"+uuidPassword)
+                .senha(uuidPassword)
                 .data_cadastro(LocalDate.now())
                 .build();
 
